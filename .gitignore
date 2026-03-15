@@ -1,0 +1,32 @@
+# Dependências do Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Diretórios de Build e Saída
+frontend/dist/
+frontend/build/
+
+# Variáveis de Ambiente e Arquivos Sensíveis
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs e Banco de Dados Locais da Ferramenta
+backend/queue.json
+backend/historico.json
+
+# Sessões do WhatsApp e Puppeteer
+backend/.wwebjs_auth/
+backend/.wwebjs_cache/
+.puppeteer/
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Logs de Erro
+*.log

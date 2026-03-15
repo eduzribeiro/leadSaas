@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space: #1A1A1A;
+  --color-chrome: #E0E0E0;
+  --color-neon: #4ADE80;
+}
+
+@layer base {
+  body {
+    @apply bg-space text-chrome font-sans min-h-screen;
+    background-color: #1A1A1A;
+    color: #E0E0E0;
+    margin: 0;
+  }
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  @apply bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6 shadow-xl;
+}
+
+/* Botões Customizados */
+.btn-neon {
+  @apply bg-neon text-space font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_15px_rgba(74, 222, 128, 0.5)] transition-all duration-300;
+}
+
+.btn-danger {
+  @apply bg-red-500/20 text-red-500 border border-red-500/50 font-bold py-3 px-6 rounded-lg hover:bg-red-500/30 transition-all duration-300;
+}
+
+.btn-outline {
+  @apply border border-chrome/30 text-chrome hover:bg-white/5 py-3 px-6 rounded-lg transition-all duration-300;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-space;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full cursor-pointer hover:bg-neon/50 transition-colors;
+}
