@@ -1,14 +1,10 @@
-@import "tailwindcss";
-
-@theme {
-  --color-space: #1A1A1A;
-  --color-chrome: #E0E0E0;
-  --color-neon: #4ADE80;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-space text-chrome font-sans min-h-screen;
+    @apply bg-[#1A1A1A] text-[#E0E0E0] font-sans min-h-screen;
     background-color: #1A1A1A;
     color: #E0E0E0;
     margin: 0;
@@ -22,7 +18,7 @@
 
 /* Botões Customizados */
 .btn-neon {
-  @apply bg-neon text-space font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_15px_rgba(74, 222, 128, 0.5)] transition-all duration-300;
+  @apply bg-[#4ADE80] text-[#1A1A1A] font-bold py-3 px-6 rounded-lg hover:shadow-neon transition-all duration-300;
 }
 
 .btn-danger {
@@ -30,7 +26,7 @@
 }
 
 .btn-outline {
-  @apply border border-chrome/30 text-chrome hover:bg-white/5 py-3 px-6 rounded-lg transition-all duration-300;
+  @apply border border-[#E0E0E0]/30 text-[#E0E0E0] hover:bg-white/5 py-3 px-6 rounded-lg transition-all duration-300;
 }
 
 /* Custom Scrollbar */
@@ -40,9 +36,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-space;
+  @apply bg-[#1A1A1A];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/20 rounded-full cursor-pointer hover:bg-neon/50 transition-colors;
+  @apply bg-white/20 rounded-full cursor-pointer hover:bg-[#4ADE80]/50 transition-colors;
 }
