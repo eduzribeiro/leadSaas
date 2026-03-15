@@ -136,9 +136,7 @@ function App() {
       {/* Header */}
       <header className="flex justify-between items-center glass-panel">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-space to-gray-800 border border-white/20 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-            <Activity className="text-neon" size={24} />
-          </div>
+          <img src="/logo.png" className="w-16 h-16 object-cover rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)]" alt="Logo LeadSaaS" />
           <div>
             <h1 className="text-2xl font-black tracking-tight text-white m-0">LEAD<span className="text-neon">SAAS</span></h1>
             <p className="text-xs text-chrome/60 -mt-1 uppercase tracking-widest font-bold">Prospecção Inteligente</p>

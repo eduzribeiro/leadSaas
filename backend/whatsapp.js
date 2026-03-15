@@ -161,9 +161,24 @@ async function processQueue() {
         .replace(/{cidade}/gi, lead.city);
 
     try {
-        const chatId = `${formatted}@c.us`;
+        // Validação Inteligente: Antes de atirar, verifica se é um WhatsApp Ativo
+        const numberId = await client.getNumberId(formatted);
+
+        if (!numberId) {
+            console.log(`[!] IGNORADO: Telefone de ${lead.name} sem WhatsApp ou é Fixo (${formatted})`);
+            queueManager.updateLeadStatus(queue.currentIndex, 'failed');
+
+            historyManager.addToHistory(formatted); // Evitar retestes futuros
+            queueManager.updateCurrentIndex(queue.currentIndex + 1);
+            notifyClients({ type: 'queue_update', queue: queueManager.getQueueData() });
+
+            currentTimeout = setTimeout(processQueue, 3000);
+            return;
+        }
+
+        const chatId = numberId._serialized;
         await client.sendMessage(chatId, message);
-        console.log(`Mensagem enviada para ${lead.name} (${formatted})`);
+        console.log(`[OK] Mensagem enviada para ${lead.name} (${formatted})`);
 
         queueManager.updateLeadStatus(queue.currentIndex, 'sent');
         historyManager.addToHistory(formatted); // Salva no histrico

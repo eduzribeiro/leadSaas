@@ -20,38 +20,53 @@ async function scrapeLeads(niche, city) {
         // Aguarda a lista de resultados carregar (se no achar, retorna vazio)
         await page.waitForSelector('div[role="feed"]', { timeout: 15000 });
 
-        // Scroll para carregar mais resultados (ex: buscar at 20)
+        // Scroll para carregar mais resultados iterando até o final
         await page.evaluate(async () => {
             const wrapper = document.querySelector('div[role="feed"]');
             if (wrapper) {
-                for (let i = 0; i < 5; i++) {
+                let lastHeight = 0;
+                let attempts = 0;
+                while (attempts < 20) { // Ate 20 scrolls longos para mais leads
                     wrapper.scrollBy(0, wrapper.scrollHeight);
                     await new Promise((resolve) => setTimeout(resolve, 2000));
+                    if (wrapper.scrollHeight === lastHeight) {
+                        await new Promise((resolve) => setTimeout(resolve, 2000));
+                        if (wrapper.scrollHeight === lastHeight) break;
+                    }
+                    lastHeight = wrapper.scrollHeight;
+                    attempts++;
                 }
             }
         });
 
-        // Extrai dados usando o eval
-        // O XPath ou QuerySelect do Google Maps muda, mas geralmente links com "hfpxzc" so os cards de lugares
+        // Extrai dados
         const items = await page.$$eval('a.hfpxzc', nodes => {
             return nodes.map(n => n.href);
         });
 
-        console.log(`Encontrados ${items.length} links, processando os dados (simulacao/extracao superficial)...`);
+        console.log(`Encontrados ${items.length} locais... extraindo dados profundos.`);
 
-        // Uma extrao mais completa:
         const extracted = await page.evaluate(() => {
             const cards = Array.from(document.querySelectorAll('.Nv2PK'));
             return cards.map(c => {
                 const nameNode = c.querySelector('.qBF1Pd');
-                // Tenta achar spans com numero de telefone q comece com "+55" ou similar
-                // Como o nome da classe eh dinamico, podemos pegar o texto innerText de divs contendo numeros
+
                 const textNodes = Array.from(c.querySelectorAll('.W4Efsd'));
-                let phoneNode = textNodes.find(t => /\(?\d{2}\)?\s?\d{4,5}-?\d{4}/.test(t.innerText));
+                let phoneText = textNodes.find(t => /\(?\d{2}\)?\s?\d{4,5}-?\d{4}/.test(t.innerText));
+
+                let waLink = c.querySelector('a[href*="wa.me/"]');
+                let rawPhone = null;
+
+                if (phoneText) {
+                    rawPhone = phoneText.innerText.match(/\(?\d{2}\)?\s?\d{4,5}-?\d{4}/)[0];
+                } else if (waLink) {
+                    const match = waLink.href.match(/wa\.me\/[+]*(\d+)/);
+                    if (match) rawPhone = match[1];
+                }
 
                 return {
                     name: nameNode ? nameNode.innerText : null,
-                    rawPhone: phoneNode ? phoneNode.innerText.match(/\(?\d{2}\)?\s?\d{4,5}-?\d{4}/)[0] : null
+                    rawPhone: rawPhone
                 };
             }).filter(i => i.name && i.rawPhone);
         });
